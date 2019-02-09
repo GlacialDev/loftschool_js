@@ -7,7 +7,7 @@
  Посмотрите как работает forEach и повторите это поведение для массива, который будет передан в параметре array
  */
 function forEach(array, fn) {
-  for(let i = 0; i < array.length; i++) {
+  for (let i = 0; i < array.length; i++) {
     fn(array[i], i, array)
   }
 }
@@ -20,7 +20,8 @@ function forEach(array, fn) {
  */
 function map(array, fn) {
   let newArray = []
-  for(let i = 0; i < array.length; i++) {
+
+  for (let i = 0; i < array.length; i++) {
     newArray.push(fn(array[i], i, array))
   }
 
@@ -38,12 +39,12 @@ function reduce(array, fn, initial) {
 
   if (initial) {
     previousValue = initial
-    for(let i = 0; i < array.length; i++) {
+    for (let i = 0; i < array.length; i++) {
       previousValue = fn(previousValue, array[i], i, array)
     }
   } else {
     previousValue = array[0]
-    for(let i = 1; i < array.length; i++) {
+    for (let i = 1; i < array.length; i++) {
       previousValue = fn(previousValue, array[i], i, array)
     }
   }
@@ -88,7 +89,7 @@ function slice(array, from, to) {
   }
   if (to <= from) {
     return newArray
-  } 
+  }
   if (!from || from < 0) {
     from = 0
   }
@@ -110,20 +111,24 @@ function slice(array, from, to) {
  Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
  */
 function createProxy(obj) {
-  let proxy = new Proxy(obj, {
+  let proxy
+
+  proxy = new Proxy(obj, {
     set(target, prop, value) {
-      target[prop] = value*value
+      target[prop] = value * value
+
       return true
     }
   })
+
   return proxy
 }
 
 export {
-    forEach,
-    map,
-    reduce,
-    upperProps,
-    slice,
-    createProxy
+  forEach,
+  map,
+  reduce,
+  upperProps,
+  slice,
+  createProxy
 };
