@@ -7,9 +7,9 @@
  Посмотрите как работает forEach и повторите это поведение для массива, который будет передан в параметре array
  */
 function forEach(array, fn) {
-  for (let i = 0; i < array.length; i++) {
-    fn(array[i], i, array)
-  }
+    for (let i = 0; i < array.length; i++) {
+        fn(array[i], i, array)
+    }
 }
 
 /*
@@ -19,13 +19,13 @@ function forEach(array, fn) {
  Посмотрите как работает map и повторите это поведение для массива, который будет передан в параметре array
  */
 function map(array, fn) {
-  let newArray = []
+    let newArray = []
 
-  for (let i = 0; i < array.length; i++) {
-    newArray.push(fn(array[i], i, array))
-  }
+    for (let i = 0; i < array.length; i++) {
+        newArray.push(fn(array[i], i, array))
+    }
 
-  return newArray
+    return newArray
 }
 
 /*
@@ -35,21 +35,21 @@ function map(array, fn) {
  Посмотрите как работает reduce и повторите это поведение для массива, который будет передан в параметре array
  */
 function reduce(array, fn, initial) {
-  let previousValue
+    let previousValue
 
-  if (initial) {
-    previousValue = initial
-    for (let i = 0; i < array.length; i++) {
-      previousValue = fn(previousValue, array[i], i, array)
+    if (initial) {
+        previousValue = initial
+        for (let i = 0; i < array.length; i++) {
+            previousValue = fn(previousValue, array[i], i, array)
+        }
+    } else {
+        previousValue = array[0]
+        for (let i = 1; i < array.length; i++) {
+            previousValue = fn(previousValue, array[i], i, array)
+        }
     }
-  } else {
-    previousValue = array[0]
-    for (let i = 1; i < array.length; i++) {
-      previousValue = fn(previousValue, array[i], i, array)
-    }
-  }
 
-  return previousValue
+    return previousValue
 }
 
 /*
@@ -61,13 +61,15 @@ function reduce(array, fn, initial) {
    upperProps({ name: 'Сергей', lastName: 'Петров' }) вернет ['NAME', 'LASTNAME']
  */
 function upperProps(obj) {
-  let array = []
+    let array = []
 
-  for (let key in obj) {
-    array.push(key.toUpperCase())
-  }
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            array.push(key.toUpperCase())
+        }
+    }
 
-  return array
+    return array
 }
 
 /*
@@ -77,31 +79,31 @@ function upperProps(obj) {
  Посмотрите как работает slice и повторите это поведение для массива, который будет передан в параметре array
  */
 function slice(array, from, to) {
-  let newArray = []
+    let newArray = []
 
-  // это печально, но ничего лучше я придумать не сумел
-  // очень странный метод слайс
-  if (from < 0) {
-    from = array.length + from
-  }
-  if (to < 0) {
-    to = array.length + to
-  }
-  if (to <= from) {
+    // это печально, но ничего лучше я придумать не сумел
+    // очень странный метод слайс
+    if (from < 0) {
+        from = array.length + from
+    }
+    if (to < 0) {
+        to = array.length + to
+    }
+    if (to <= from) {
+        return newArray
+    }
+    if (!from || from < 0) {
+        from = 0
+    }
+    if (!to || to > array.length) {
+        to = array.length
+    }
+
+    for (let i = from; i < to; i++) {
+        newArray.push(array[i])
+    }
+
     return newArray
-  }
-  if (!from || from < 0) {
-    from = 0
-  }
-  if (!to || to > array.length) {
-    to = array.length
-  }
-
-  for (let i = from; i < to; i++) {
-    newArray.push(array[i])
-  }
-
-  return newArray
 }
 
 /*
@@ -111,24 +113,24 @@ function slice(array, from, to) {
  Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
  */
 function createProxy(obj) {
-  let proxy
+    let proxy
 
-  proxy = new Proxy(obj, {
-    set(target, prop, value) {
-      target[prop] = value * value
+    proxy = new Proxy(obj, {
+        set(target, prop, value) {
+            target[prop] = value * value
 
-      return true
-    }
-  })
+            return true
+        }
+    })
 
-  return proxy
+    return proxy
 }
 
 export {
-  forEach,
-  map,
-  reduce,
-  upperProps,
-  slice,
-  createProxy
+    forEach,
+    map,
+    reduce,
+    upperProps,
+    slice,
+    createProxy
 };
