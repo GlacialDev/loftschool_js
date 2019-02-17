@@ -35,7 +35,7 @@ describe('ДЗ 2 - работа с исключениями и отладчик�
         });
 
         it('должна выбросить исключение, если передан не массив', () => {
-            assert.throws(isAllTrue.bind(null,':(', () => {
+            assert.throws(isAllTrue.bind(null, ':(', () => {
             }), 'empty array');
             assert.throws(isAllTrue.bind(null, {}, () => {
             }), 'empty array');
