@@ -149,14 +149,16 @@ function calculator(number = 0) {
         div: function () {
             // тесты говорят, здесь что-то не так
             // по моему всё норм, в гугле в консоли работает
-            let result = this.number;
+            // let result = this.number;
+            // тесты не болейте
+            let result = number;
 
             for (let arg of arguments) {
                 if (arg === 0) {
                     throw new Error('division by 0');
                 }
 
-                result = result / arg
+                result = result / arg;
             }
 
             return result;
