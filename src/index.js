@@ -18,22 +18,23 @@
  */
 function isAllTrue(array, fn) {
 
-  if (!(array instanceof Array) || array.length === 0) {
-    throw new Error("empty array");
-  };
-  if (!(fn instanceof Function)) {
-    throw new Error("fn is not a function");
-  };
+    if (!(array instanceof Array) || array.length === 0) {
+        throw new Error('empty array');
+    }
+    if (!(fn instanceof Function)) {
+        throw new Error('fn is not a function');
+    }
 
+    let isTrueReturns;
 
-  let isTrueReturns;
+    for (let item of array) {
+        isTrueReturns = fn(item);
+        if (!isTrueReturns) {
+            break;
+        }
+    }
 
-  for (let item of array) {
-    isTrueReturns = fn(item);
-    if (!isTrueReturns) break;
-  };
-
-  return isTrueReturns;
+    return isTrueReturns;
 }
 
 /*
@@ -54,21 +55,23 @@ function isAllTrue(array, fn) {
  */
 function isSomeTrue(array, fn) {
 
-  if (!(array instanceof Array) || array.length === 0) {
-    throw new Error("empty array");
-  };
-  if (!(fn instanceof Function)) {
-    throw new Error("fn is not a function");
-  };
+    if (!(array instanceof Array) || array.length === 0) {
+        throw new Error('empty array');
+    }
+    if (!(fn instanceof Function)) {
+        throw new Error('fn is not a function');
+    }
 
-  let isTrueReturns;
+    let isTrueReturns;
 
-  for (let item of array) {
-    isTrueReturns = fn(item);
-    if (isTrueReturns) break;
-  };
+    for (let item of array) {
+        isTrueReturns = fn(item);
+        if (isTrueReturns) {
+            break;
+        }
+    }
 
-  return isTrueReturns;
+    return isTrueReturns;
 }
 
 /*
@@ -83,21 +86,21 @@ function isSomeTrue(array, fn) {
    - fn не является функцией (с текстом "fn is not a function")
  */
 function returnBadArguments(fn) {
-  let badArgumentsArray = [];
+    let badArgumentsArray = [];
 
-  if (!(fn instanceof Function)) {
-    throw new Error("fn is not a function");
-  }
-
-  for (let i = 1; i < arguments.length; i++) {
-    try {
-      fn(arguments[i]);
-    } catch {
-      badArgumentsArray.push(arguments[i]);
+    if (!(fn instanceof Function)) {
+        throw new Error('fn is not a function');
     }
-  }
 
-  return badArgumentsArray;
+    for (let i = 1; i < arguments.length; i++) {
+        try {
+            fn(arguments[i]);
+        } catch (e) {
+            badArgumentsArray.push(arguments[i]);
+        }
+    }
+
+    return badArgumentsArray;
 }
 
 /*
@@ -119,64 +122,64 @@ function returnBadArguments(fn) {
  */
 function calculator(number = 0) {
 
-  if (!isFinite(number)) {
-    throw new Error("number is not a number");
-  };
-
-  const calcObject = {
-    number: number,
-    sum: function () {
-      let result = this.number;
-
-      for (let arg of arguments) {
-        result += arg;
-      }
-
-      return result;
-    },
-    dif: function () {
-      let result = this.number;
-
-      for (let arg of arguments) {
-        result -= arg;
-      }
-
-      return result;
-    },
-    div: function () {
-      // тесты говорят, здесь что-то не так
-      // по моему всё норм, в гугле в консоли работает
-      let result = this.number;
-
-      for (let arg of arguments) {
-        if (arg === 0) {
-          throw new Error('division by 0');
-        }
-
-        result = result / arg
-      }
-
-      return result;
-    },
-    mul: function () {
-      let result = this.number;
-
-      for (let arg of arguments) {
-        result = result * arg;
-      }
-
-      return result;
+    if (!isFinite(number)) {
+        throw new Error('number is not a number');
     }
-  }
 
-  return calcObject;
+    const calcObject = {
+        number: number,
+        sum: function () {
+            let result = this.number;
+
+            for (let arg of arguments) {
+                result += arg;
+            }
+
+            return result;
+        },
+        dif: function () {
+            let result = this.number;
+
+            for (let arg of arguments) {
+                result -= arg;
+            }
+
+            return result;
+        },
+        div: function () {
+            // тесты говорят, здесь что-то не так
+            // по моему всё норм, в гугле в консоли работает
+            let result = this.number;
+
+            for (let arg of arguments) {
+                if (arg === 0) {
+                    throw new Error('division by 0');
+                }
+
+                result = result / arg
+            }
+
+            return result;
+        },
+        mul: function () {
+            let result = this.number;
+
+            for (let arg of arguments) {
+                result = result * arg;
+            }
+
+            return result;
+        }
+    }
+
+    return calcObject;
 }
 
 /* При решении задач, пострайтесь использовать отладчик */
 
 export {
-  isAllTrue,
-  isSomeTrue,
-  returnBadArguments,
-  calculator
+    isAllTrue,
+    isSomeTrue,
+    returnBadArguments,
+    calculator
 };
