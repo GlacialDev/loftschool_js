@@ -17,7 +17,6 @@
    isAllTrue([100, 2, 3, 4, 5], n => n < 10) // вернет false
  */
 function isAllTrue(array, fn) {
-
     if (!(array instanceof Array) || array.length === 0) {
         throw new Error('empty array');
     }
@@ -54,7 +53,6 @@ function isAllTrue(array, fn) {
    isSomeTrue([1, 2, 3, 4, 5], n => n > 20) // вернет false
  */
 function isSomeTrue(array, fn) {
-
     if (!(array instanceof Array) || array.length === 0) {
         throw new Error('empty array');
     }
@@ -121,8 +119,7 @@ function returnBadArguments(fn) {
    - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
 function calculator(number = 0) {
-
-    if (!isFinite(number)) {
+    if (typeof number !== 'number') {
         throw new Error('number is not a number');
     }
 
