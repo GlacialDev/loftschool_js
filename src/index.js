@@ -251,8 +251,8 @@ function observeChildNodes(where, fn) {
             nodes: []
         }
 
-        if (mutations.type === 'childList') {
-            mutations.forEach(function (mutation) {
+        mutations.forEach(function (mutation) {
+            if (mutation.type === 'childList') {
                 if (mutation.addedNodes.length > 0) {
                     data.type = 'insert';
                     for (let mutation of mutation.addedNodes) {
@@ -264,10 +264,10 @@ function observeChildNodes(where, fn) {
                         data.nodes.push(mutation);
                     }
                 }
-            });
+            }
+        });
 
-            fn(data);
-        }
+        fn(data);
     }
 
     const observer = new MutationObserver(onMutate)
