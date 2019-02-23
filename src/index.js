@@ -258,7 +258,8 @@ function observeChildNodes(where, fn) {
                     for (let mutation of mutation.addedNodes) {
                         data.nodes.push(mutation);
                     }
-                } else if (mutation.removedNodes.length > 0) {
+                }
+                if (mutation.removedNodes.length > 0) {
                     data.type = 'remove';
                     for (let mutation of mutation.removedNodes) {
                         data.nodes.push(mutation);
