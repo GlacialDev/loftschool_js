@@ -122,7 +122,7 @@ function deleteTextNodes(where) {
  */
 function deleteTextNodesRecursive(where) {
     for (let node of where.childNodes) {
-        //чистим ноду от текста
+        // чистим ноду от текста
         clearTextNodes(node);
         // если в ноде остались дети (только элементы)
         // вызываем для этой ноды рекурсивно эту функцию дабы циклом прошлась
@@ -141,23 +141,6 @@ function deleteTextNodesRecursive(where) {
             }
         }
     }
-    /*
-    <span> 
-        <div> 
-            <b>привет</b> 
-        </div> 
-        <p>loftchool</p> 
-    !!!
-    </span>
-    находим элемент
-    проверяем есть ли дочерние, если есть
-    заходим в первый дочерний
-    проверяем есть ли дочерние, если есть
-    заходим в первый дочерний
-    ... и так далее 
-    пока не дойдем до такого, где нет дочернего
-    
-    */
 }
 
 /*
@@ -181,6 +164,48 @@ function deleteTextNodesRecursive(where) {
    }
  */
 function collectDOMStat(root) {
+    let DOMStatData = {
+        tags: {},
+        classes: {},
+        texts: 0
+    };
+
+    function getNodeData(root) {
+        for (let node of root.childNodes) {
+            // если текстовый узел, пишем в свойство texts
+            if (node.nodeType === 3) {
+                ++DOMStatData.texts;
+                // если узел не текстовый, пишем в свойство tags
+            } else if (node.nodeType === 1) {
+                // тернарник: если свойства нет, задаем его и значение 1 (мы же уже нашли сейчас первый раз его)
+                // если свойство нет, ++
+                !DOMStatData.tags.hasOwnProperty(node.nodeName) ?
+                    DOMStatData.tags[node.nodeName] = 1 :
+                    ++DOMStatData.tags[node.nodeName]
+            }
+
+            if (node.classList) {
+                // классов на элементе может быть несколько, перебираем все циклом
+                for (let className of node.classList) {
+                    // тернарник: если класса нет, задаем его и значение 1 (мы же уже нашли сейчас первый раз его)
+                    // если класса нет, ++
+                    !DOMStatData.classes[className] ?
+                        DOMStatData.classes[className] = 1 :
+                        ++DOMStatData.classes[className]
+
+                }
+            }
+
+            // вызываем рекурсию если у этой ноды есть дочерние ноды
+            if (node.hasChildNodes()) {
+                getNodeData(node)
+            }
+        }
+    }
+
+    getNodeData(root)
+
+    return DOMStatData;
 }
 
 /*
