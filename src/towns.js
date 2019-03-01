@@ -1,5 +1,3 @@
-import { rejects } from "assert";
-
 /*
  Страница должна предварительно загрузить список городов из
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
@@ -105,8 +103,11 @@ const filterResult = homeworkContainer.querySelector('#filter-result');
 filterInput.addEventListener('keyup', function () {
     filterResult.innerHTML = '';
     let inputValue = filterInput.value.trim();
+
     // проверка на пустой инпут, ничего не выводить если пробелы
-    if (inputValue === '') return
+    if (inputValue === '') {
+        return
+    }
 
     for (let town of towns) {
         if (isMatching(town.name, inputValue)) {
