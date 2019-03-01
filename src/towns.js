@@ -1,3 +1,5 @@
+import { rejects } from "assert";
+
 /*
  Страница должна предварительно загрузить список городов из
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
@@ -52,10 +54,11 @@ loadTowns().then(townsData => {
 function loadTowns() {
     let url = 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
 
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         let towns = fetch(url)
             .then(response => response.json())
             .then(data => data.sort(sortArray))
+            .catch(() => reject())
 
         resolve(towns)
     })
@@ -101,9 +104,12 @@ const filterResult = homeworkContainer.querySelector('#filter-result');
 
 filterInput.addEventListener('keyup', function () {
     filterResult.innerHTML = '';
+    let inputValue = filterInput.value.trim();
+    // проверка на пустой инпут, ничего не выводить если пробелы
+    if (inputValue === '') return
 
     for (let town of towns) {
-        if (isMatching(town.name, filterInput.value)) {
+        if (isMatching(town.name, inputValue)) {
             let div = document.createElement('div');
 
             div.innerText = town.name;
