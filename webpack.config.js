@@ -1,8 +1,8 @@
 let webpack = require('webpack');
 let HtmlPlugin = require('html-webpack-plugin');
 let CleanWebpackPlugin = require('clean-webpack-plugin');
-let UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 let rules = require('./webpack.config.rules');
 let path = require('path');
 
@@ -16,7 +16,7 @@ rules.push({
 
 module.exports = {
     entry: {
-        main: './src/cookie.js',
+        cookie: './src/cookie.js',
     },
     devServer: {
         index: 'cookie.html'
@@ -27,6 +27,16 @@ module.exports = {
     },
     devtool: 'source-map',
     module: { rules },
+    plugins: [
+        new ExtractTextPlugin('styles.css'),
+        new HtmlPlugin({
+            title: 'cookie',
+            template: './src/cookie.hbs',
+            filename: 'cookie.html',
+            chunks: ['cookie']
+        }),
+        new CleanWebpackPlugin(['dist'])
+    ],
     optimization: {
         minimizer: [
             // we specify a custom UglifyJsPlugin here to get source maps in production
@@ -41,15 +51,5 @@ module.exports = {
                 sourceMap: true
             })
         ]
-    },
-    plugins: [
-        new ExtractTextPlugin('styles.css'),
-        new HtmlPlugin({
-            title: 'cookie Homework',
-            template: './src/cookie.hbs',
-            filename: 'cookie.html',
-            chunks: ['cookie']
-        }),
-        new CleanWebpackPlugin(['dist'])
-    ]
+    }
 };
