@@ -1,8 +1,9 @@
 let webpack = require('webpack');
 let HtmlPlugin = require('html-webpack-plugin');
 let CleanWebpackPlugin = require('clean-webpack-plugin');
+let UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
-let rules = require('./webpack.config.rules')();
+let rules = require('./webpack.config.rules');
 let path = require('path');
 
 rules.push({
@@ -15,11 +16,10 @@ rules.push({
 
 module.exports = {
     entry: {
-        main: './src/index.js',
-        dnd: './src/dnd.js'
+        main: './src/cookie.js',
     },
     devServer: {
-        index: 'dnd.html'
+        index: 'cookie.html'
     },
     output: {
         filename: '[name].[hash].js',
@@ -27,25 +27,28 @@ module.exports = {
     },
     devtool: 'source-map',
     module: { rules },
+    optimization: {
+        minimizer: [
+            // we specify a custom UglifyJsPlugin here to get source maps in production
+            new UglifyJsPlugin({
+                cache: true,
+                parallel: true,
+                uglifyOptions: {
+                    compress: false,
+                    ecma: 6,
+                    mangle: true
+                },
+                sourceMap: true
+            })
+        ]
+    },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                drop_debugger: false,
-                warnings: false
-            }
-        }),
         new ExtractTextPlugin('styles.css'),
         new HtmlPlugin({
-            title: 'Main Homework',
-            template: 'main.hbs',
-            chunks: ['main']
-        }),
-        new HtmlPlugin({
-            title: 'Div Drag And Drop',
-            template: 'dnd.hbs',
-            filename: 'dnd.html',
-            chunks: ['dnd']
+            title: 'cookie Homework',
+            template: './src/cookie.hbs',
+            filename: 'cookie.html',
+            chunks: ['cookie']
         }),
         new CleanWebpackPlugin(['dist'])
     ]
