@@ -45,6 +45,17 @@ const listTable = homeworkContainer.querySelector('#list-table tbody');
 
 filterNameInput.addEventListener('keyup', function () {
   // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
+  for (let i = 0; i < listTable.children.length; i++) {
+    let name = listTable.children[i].children[0].innerText
+    let value = listTable.children[i].children[1].innerText
+
+    if (name.indexOf(filterNameInput.value) !== -1 || value.indexOf(filterNameInput.value) !== -1) {
+      listTable.children[i].hidden = false
+    } else {
+      listTable.children[i].hidden = true
+    }
+  }
+
 });
 
 addButton.addEventListener('click', () => {
