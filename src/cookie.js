@@ -44,106 +44,105 @@ const addButton = homeworkContainer.querySelector('#add-button');
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
 filterNameInput.addEventListener('keyup', function () {
-  // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
-  for (let i = 0; i < listTable.children.length; i++) {
-    let name = listTable.children[i].children[0].innerText
-    let value = listTable.children[i].children[1].innerText
+    let cookieObject = cookieParse();
+    let cookieForRender = {};
 
-    if (name.indexOf(filterNameInput.value) !== -1 || value.indexOf(filterNameInput.value) !== -1) {
-      listTable.children[i].hidden = false
-    } else {
-      listTable.children[i].hidden = true
+    for (let cookie in cookieObject) {
+        if (cookie) {
+            if (cookie.indexOf(filterNameInput.value) !== -1 ||
+                cookieObject[cookie].indexOf(filterNameInput.value) !== -1) {
+                cookieForRender[cookie] = cookieObject[cookie]
+            }
+        }
     }
-  }
 
+    renderTable(cookieForRender);
 });
 
 addButton.addEventListener('click', () => {
-  // здесь можно обработать нажатие на кнопку "добавить cookie"
-  if (document.cookie !== '') {
-    let cookieObject = cookieParse()
-    let cookieNamesArray = Object.keys(cookieObject)
-    let isCookieDontExist = 1
+    setCookie(addNameInput.value, addValueInput.value, 31);
+    renderTable(cookieParse());
 
-    for (let i = 0; i < cookieNamesArray.length; i++) {
-      if (addNameInput.value === cookieNamesArray[i]) {
-        // если имя куки совпадает с одним из имен ключей в объекте из cookieParse
-        // мы заменяем имя куки в табличке, и ставим новое значение куки методом setCookie
-        // переключаем флаг, указывающий на то, надо ли создавать новую строку в таблице
-        listTable.children[i].children[1].innerText = addValueInput.value;
-        setCookie(addNameInput.value, addValueInput.value);
-        isCookieDontExist = 0;
-      }
-    }
-
-    if (isCookieDontExist) createNewTr(addNameInput.value, addValueInput.value)
-
-  } else {
-    createNewTr(addNameInput.value, addValueInput.value)
-  }
-
-  addNameInput.value = ''
-  addValueInput.value = ''
+    addNameInput.value = '';
+    addValueInput.value = '';
 });
 
+// используем делегирование в пределах таблицы для кнопок удаления куки
+listTable.addEventListener('click', (e) => {
+    if (e.target.classList.contains('cookie-button')) {
+        let cookieName = e.target.parentNode.parentNode.firstChild.innerText;
+
+        deleteCookie(cookieName);
+        e.target.parentNode.parentNode.remove();
+        renderTable(cookieParse());
+    }
+})
 
 function setCookie(name, value, options) {
-  options = options || {};
-
-  var expires = options.expires;
-
-  if (typeof expires == "number" && expires) {
-    var d = new Date();
-    d.setTime(d.getTime() + expires * 1000);
-    expires = options.expires = d;
-  }
-  if (expires && expires.toUTCString) {
-    options.expires = expires.toUTCString();
-  }
-
-  value = encodeURIComponent(value);
-
-  var updatedCookie = name + "=" + value;
-
-  for (var propName in options) {
-    updatedCookie += "; " + propName;
-    var propValue = options[propName];
-    if (propValue !== true) {
-      updatedCookie += "=" + propValue;
+    if (name.trim() === '') {
+        return;
     }
-  }
 
-  document.cookie = updatedCookie;
+    options = options || {};
+
+    let expires = options.expires;
+
+    if (typeof expires == 'number' && expires) {
+        let d = new Date();
+
+        d.setTime(d.getTime() + expires * 1000);
+        expires = options.expires = d;
+    }
+    if (expires && expires.toUTCString) {
+        options.expires = expires.toUTCString();
+    }
+
+    value = encodeURIComponent(value);
+
+    let updatedCookie = name + '=' + value;
+
+    for (let propName in options) {
+        if (propName) {
+            updatedCookie += '; ' + propName;
+            let propValue = options[propName];
+
+            if (propValue !== true) {
+                updatedCookie += '=' + propValue;
+            }
+        }
+    }
+
+    document.cookie = updatedCookie;
 }
 
 function deleteCookie(name) {
-  setCookie(name, "", {
-    expires: -1
-  })
+    setCookie(name, '', {
+        expires: -1
+    })
 }
 
 function cookieParse() {
-  let cookieObject = document.cookie.split('; ').reduce((prev, current) => {
-    const [name, value] = current.split('=');
-    prev[name] = value;
-    return prev
-  }, {});
-  return cookieObject
+    let cookieObject = document.cookie.split('; ').reduce((prev, current) => {
+        const [name, value] = current.split('=');
+
+        prev[name] = value;
+
+        return prev
+    }, {});
+
+    return cookieObject
 }
 
-function createNewTr(name, value) {
-  setCookie(name, value, 31)
-  let tr = document.createElement('tr');
-  tr.innerHTML = `<th>${name}</th><th>${value}</th><th><button type="button" id="cookie-${name}">Удалить cookie</button></div></th>`;
+function renderTable(cookieObject) {
+    listTable.innerHTML = ''
 
-  listTable.appendChild(tr);
+    for (let cookie in cookieObject) {
+        if (cookie) {
+            let tr = document.createElement('tr');
 
-  let removeCookieBtn = tr.querySelector(`#cookie-${name}`);
-
-  removeCookieBtn.addEventListener('click', () => {
-    let cookieName = tr.firstChild.innerText.trim()
-
-    deleteCookie(cookieName)
-    removeCookieBtn.parentNode.parentNode.remove();
-  })
+            tr.innerHTML = `<th>${cookie}</th><th>${cookieObject[cookie]}</th>
+            <th><button type="button" class="cookie-button">Удалить cookie</button></div></th>`;
+            listTable.appendChild(tr);
+        }
+    }
 }
