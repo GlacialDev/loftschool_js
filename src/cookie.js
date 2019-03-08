@@ -63,7 +63,6 @@ filterNameInput.addEventListener('keyup', function () {
 
 addButton.addEventListener('click', () => {
     setCookie(addNameInput.value, addValueInput.value, 31);
-    console.log(cookieParse());
     renderTable(cookieParse());
 
     addNameInput.value = '';
