@@ -43,6 +43,8 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
+renderTable(cookieParse());
+
 filterNameInput.addEventListener('keyup', function () {
     let cookieObject = cookieParse();
     let cookieForRender = {};
@@ -61,6 +63,7 @@ filterNameInput.addEventListener('keyup', function () {
 
 addButton.addEventListener('click', () => {
     setCookie(addNameInput.value, addValueInput.value, 31);
+    console.log(cookieParse());
     renderTable(cookieParse());
 
     addNameInput.value = '';
