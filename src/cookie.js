@@ -63,10 +63,12 @@ filterNameInput.addEventListener('keyup', function () {
 
 addButton.addEventListener('click', () => {
     setCookie(addNameInput.value, addValueInput.value, 31);
-    renderTable(cookieParse());
+    // после добавления новой куки и рендера проверяем есть ли что в инпуте
+    filterNameInput.dispatchEvent(new KeyboardEvent('keyup'));
 
-    addNameInput.value = '';
-    addValueInput.value = '';
+    // тесты тянут значения кук из формы
+    // addNameInput.value = '';
+    // addValueInput.value = '';
 });
 
 // используем делегирование в пределах таблицы для кнопок удаления куки
